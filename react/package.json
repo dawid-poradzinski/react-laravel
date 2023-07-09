@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tabler/icons-react": "^2.24.0",
     "@visx/annotation": "^3.0.1",
     "@visx/group": "^3.0.0",
     "@visx/mock-data": "^3.0.0",
