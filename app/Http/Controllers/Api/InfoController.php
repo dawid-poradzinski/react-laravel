@@ -35,10 +35,10 @@ class InfoController extends Controller
         $data = $request->validated();
 
         $string = "";
-        for($i = 0; $i < 3; $i++) {
-            $number = random_int(0,255);
-            $string += $number.to_String();
-            $data['color']->$string;
+        for($i = 0; $i < 6; $i++) {
+            $number = random_int(0,15);
+            $string .= dechex($number);
+            $data['color'] = '#'.$string;
         }
 
         $info = Info::create($data);
@@ -61,8 +61,7 @@ class InfoController extends Controller
     {
         $data = $request->validated();
         $info->update($data);
-
-        return response(new InfoResponse($info), 200);
+        return response(new InfoResource($info), 200);
     }
 
     /**
@@ -70,6 +69,7 @@ class InfoController extends Controller
      */
     public function destroy(Info $info)
     {
+        
         $info->delete();
 
         return response("", 204);

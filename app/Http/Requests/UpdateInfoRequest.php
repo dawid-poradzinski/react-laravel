@@ -23,8 +23,8 @@ class UpdateInfoRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:55',
-            'amount' => 'required|int',
-            'color' =>'required|string|size:7|regex:/^#[0-9A-Fa-f]+$/'
+            'amount' => 'required|integer|min:1|numeric',
+            'color' =>'required|string|size:7|regex:/^#[0-9A-Fa-f]{6}$/'
         ];
     }
 }

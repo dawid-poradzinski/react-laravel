@@ -23,7 +23,7 @@ class StoreInfoRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:55',
-            'amount' => 'required|int|',
+            'amount' => 'required|numeric|integer|min:1',
         ];
     }
 }

@@ -16,24 +16,21 @@ const Chart = (props : any) => {
 
     }, [props]);
 
-    const [active, setActive] = useState<{amount?: number; name?: string, color?: string} | null>(null);
-
-    const scale = suma > 100000000 ? true : false;
+    const [active, setActive] = useState<{id: number, amount: number, name: string, color: string} | null>(null);
 
     const half = 130;
 
     return (
         <div className="w-full h-full">
-            {suma != 0 && (
                     <svg className="w-full h-full flex items-center justify-center">
 
-                    <Group className=" translate-x-1/2 translate-y-[45%]">
+                    <Group className=" translate-x-1/2 translate-y-[50%]">
                         <Pie
                         data={data}
                         pieValue={(data) => data['amount']}
                         outerRadius={half}
                         innerRadius={(info) => {
-                            const size = active && active.name == info.data['name'] ? 24 : 16;
+                            const size = active && active.id == info.data['id'] ? 24 : 16;
                             return half - size;
                         }}
                         padAngle={0.02}
@@ -42,26 +39,27 @@ const Chart = (props : any) => {
                                 return pie.arcs.map((arc) => {
                                 
                                     const [centroidX, centroidY] = pie.path.centroid(arc);
-                                    const hasSpaceForLabel = arc.endAngle - arc.startAngle >= 0.5;
-                                    const targetLabelOffset = (260) * 0.6;
+                                    const targetLabelOffset = 200;
         
                                     return (
-                                            <g key={arc.data['name']}
+                                            <g key={arc.data['id']}
                                             onMouseEnter={() => setActive(arc.data)}
                                             onMouseLeave={() => setActive(null)}
                                             >
                                                 <path d={pie.path(arc)} fill={arc.data['color']}></path>
-                                                {hasSpaceForLabel && (
+                                                
+                                                {active?.id == arc.data['id'] && (
                                                     <Annotation
-                                                    x={centroidX}
-                                                    y={centroidY}
-                                                    dx={
-                                                        (centroidX < 0 ? -targetLabelOffset : targetLabelOffset) -
-                                                        centroidX
-                                                        }
-                                                        dy={centroidY < 0 ? -20 : 20}
-                                                    >
+                                                        x={centroidX}
+                                                        y={centroidY}
+                                                        dx={
+                                                            (centroidX < 0 ? -targetLabelOffset : targetLabelOffset) -
+                                                            centroidX
+                                                            }
+                                                            dy={centroidY < 0 ? -20 : 25}
+                                                        >
                                                         <Label
+                                                        className="hidden md:block"
                                                         showAnchorLine
                                                         anchorLineStroke="#eaeaea"
                                                         showBackground={true}
@@ -69,9 +67,10 @@ const Chart = (props : any) => {
                                                         subtitle={`${((arc.data['amount']/suma)* 100).toFixed(1)}%`}
                                                         subtitleFontSize={16}
                                                         fontColor="#000"
+                                                        maxWidth={100}
                                                         width={100}
                                                         />
-                                                        <Connector stroke="#000"/>
+                                                        <Connector stroke="#000" className="hidden md:block"/>
                                                     </Annotation>
                                                 )}
                                             </g>
@@ -81,16 +80,16 @@ const Chart = (props : any) => {
                         </Pie>
                             {active ?
                                 <>
-                                <Text textAnchor="middle" fill="#000" dy={-10} fontSize={40} width={70} scaleToFit={scale} >
+                                <Text textAnchor="middle" fill="#000" dy={-10} fontSize={40} width={70} scaleToFit={active.amount.toString().length > 20} >
                                     {active.amount}
                                 </Text>
-                                <Text textAnchor="middle" fill={active.color} dy={30} fontSize={20}>
+                                <Text textAnchor="middle" fill={active.color} dy={30} fontSize={20} width={150} scaleToFit={active.name.toString().length > 24}>
                                     {active.name}
                                 </Text>
                             </>
                             :
                             <>
-                                <Text textAnchor="middle" fill="#000" dy={-10} fontSize={40} width={70} scaleToFit={scale}>
+                                <Text textAnchor="middle" fill="#000" dy={-10} fontSize={40} width={70} scaleToFit={suma.toString().length > 20}>
                                     {suma}
                                 </Text>
                                 <Text textAnchor="middle" fill="#444" dy={30} fontSize={20}>
@@ -100,7 +99,6 @@ const Chart = (props : any) => {
                             }
                     </Group>
                 </svg>
-            )};
         </div>
     )
 

@@ -19,12 +19,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get(
-    '/info/get/all',
-    [InfoController::class, 'index']
-)->name('info');
 
-Route::get(
-    '/info/sum',
-    [InfoController::class, 'sum']
-)->name('info');
+Route::controller(InfoController::class)->group(function () {
+    Route::get("/info/get/all", "index");
+    Route::get("/info/sum", "sum");
+    Route::delete("/info/delete/{info}", "destroy");
+    Route::get("/info/get/single/{info}", "show");
+    Route::put("/info/update/{info}", "update");
+    Route::put("/info/put", "store");
+});
